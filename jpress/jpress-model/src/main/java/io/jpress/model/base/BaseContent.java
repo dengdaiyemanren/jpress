@@ -168,6 +168,14 @@ public abstract class BaseContent<M extends BaseContent<M>> extends JModel<M> im
 		set("link_to", linkTo);
 	}
 
+	public java.lang.String getMarked() {
+		return get("marked");
+	}
+	
+	public void setMarked(java.lang.String marked) {
+		set("marked", marked);
+	}
+	
 	public java.lang.String getLinkTo() {
 		return get("link_to");
 	}

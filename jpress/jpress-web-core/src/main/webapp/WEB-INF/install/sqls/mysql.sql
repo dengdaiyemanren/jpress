@@ -83,6 +83,7 @@ CREATE TABLE `{table_prefix}content` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `title` text COMMENT '标题',
   `text` longtext COMMENT '内容',
+  `marked` longtext COMMENT 'mark内容',
   `summary` text COMMENT '摘要',
   `link_to` varchar(256) DEFAULT NULL COMMENT '连接到(常用于谋文章只是一个连接)',
   `markdown_enable` tinyint(1) DEFAULT '0' COMMENT '是否启用markdown',

@@ -6,47 +6,43 @@ var data={
 };
 
 function initTinymce(){
-	tinymce.init({
-        selector: '#textarea',
-        height: 365,
-        language: 'zh_CN',
-        menubar: false,
-        automatic_uploads: true,
-        paste_data_images: true,
-        convert_urls: false,
-        relative_urls : false,
-        imagetools_toolbar: "rotateleft rotateright | flipv fliph | editimage imageoptions",
-        imagetools_proxy: '${CPATH}/admin/tinymce/image/proxy',
-        images_upload_url: '${CPATH}/admin/tinymce/image/upload',
-        wordcount_countregex: /[\u4e00-\u9fa5_a-zA-Z0-9]/g,
-		file_picker_callback: function(callback, value, meta) {
-		 	layer.open({
-			    type: 2,
-			    title: '选择图片',
-			    shadeClose: true,
-			    shade: 0.8,
-			    area: ['92%', '90%'],
-			    content: '${CPATH}/admin/attachment/choose_layer',
-			    end:function(){
-			    	if(''!=data.url && null != data.url){
-			    		callback(data.url, {alt: data.alt});
-			    	}
-			    }
-			}); 
-		 },
-        plugins: [
-		    "advlist autolink autosave link image media imagetools lists charmap print preview hr anchor pagebreak spellchecker",
-		    "searchreplace wordcount visualblocks visualchars code codesample fullscreen insertdatetime media nonbreaking",
-		    "table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern"
-		  ],
-        toolbar1: '  bold italic underline strikethrough removeformat | blockquote hr table image media codesample | anchor link   unlink | alignleft aligncenter alignright alignjustify | bullist numlist     ',
-        toolbar2: '  formatselect | outdent indent | forecolor backcolor  |  undo redo | code  fullscreen',
-	});
+tinymce.init({
+  selector: 'textarea',
+  height: 500,
+  theme: 'modern',
+  plugins: [
+    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+    'searchreplace wordcount visualblocks visualchars code fullscreen',
+    'insertdatetime media nonbreaking save table contextmenu directionality',
+    'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+  ],
+  toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+  image_advtab: true,
+  templates: [
+    { title: 'Test template 1', content: 'Test 1' },
+    { title: 'Test template 2', content: 'Test 2' }
+  ],
+  content_css: [
+    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+    '//www.tinymce.com/css/codepen.min.css'
+  ]
+ });
+	
+	
+	
 }
 
 var simplemde ;
 function initMarkdownEditor(){
+	if("" != $('#content_marked').attr('value'))
+	{
+	 $('#textarea').text($('#content_marked').attr('value'));
+	 }
+	 
 	 simplemde = new SimpleMDE({ element: $("#textarea")[0] });
+	 
+	 
 }
 
 var _editor = "${_editor!}";
@@ -63,10 +59,13 @@ function save(){
 	if("tinymce" == _editor){
 		tinymce.activeEditor.uploadImages(function(success) {
 			tinymce.triggerSave();
+			 $('#content_marked').attr('value',"");
 	 		doSubmit();
 		});
 	}else{
 		$("#textarea").text(simplemde.markdown(simplemde.value()));
+		//$("#context_markedText").text(simplemde.value());
+		 $('#content_marked').attr('value',simplemde.value());
 		doSubmit();
 	}
 	return false;
