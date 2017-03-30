@@ -29,8 +29,9 @@ import io.jpress.model.Content;
 import io.jpress.model.ModelSorter;
 import io.jpress.model.Taxonomy;
 import io.jpress.model.query.ContentQuery;
-import io.jpress.model.router.TaxonomyRouter;
+import io.jpress.model.query.TaxonomyQuery;
 import io.jpress.model.vo.NavigationMenu;
+import io.jpress.router.converter.TaxonomyRouter;
 import io.jpress.utils.StringUtils;
 
 public class MenusTag extends JTag {
@@ -62,6 +63,11 @@ public class MenusTag extends JTag {
 
 		BigInteger parentId = getParamToBigInteger("parentId");
 		String activeClass = getParam("activeClass", "active");
+		
+		if(null ==parentId)
+		{
+			parentId = new BigInteger("0");
+		}
 
 		List<Content> list = ContentQuery.me().findByModule(Consts.MODULE_MENU, parentId, "order_number ASC");
 
@@ -78,7 +84,29 @@ public class MenusTag extends JTag {
 
 		List<NavigationMenu> menulist = new ArrayList<NavigationMenu>();
 		for (Content c : list) {
-			menulist.add(new NavigationMenu(c, activeClass));
+			
+			
+			NavigationMenu navMenu  = new NavigationMenu(c, activeClass);
+			BigInteger taxonomyParentId = c.getObjectId();
+			
+			List<Taxonomy> subTaxList = TaxonomyQuery.me().findListByParentId(taxonomyParentId);
+			
+			if (subTaxList != null && subTaxList.size()>=1) {
+				
+				for (int i = 0; i < subTaxList.size(); i++) {
+					List<Content> subContents = ContentQuery.me().findByObjectId(subTaxList.get(i).getId());
+
+					NavigationMenu subMenu = new NavigationMenu(subContents.get(0), activeClass);
+					navMenu.addChild(subMenu);
+					
+					navMenu.getChildList();
+				}
+				
+				
+			}
+			
+			
+			menulist.add(navMenu);
 		}
 
 		setVariable("menus", menulist);

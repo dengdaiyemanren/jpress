@@ -17,16 +17,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
+  <link rel="stylesheet" href="${CPATH}/static/bootstrap/css/bootstrap.min.css" />
+
+    <script src="${CTPATH}/assets/js/jquery-2.1.1.min.js"></script>
+  <script src="${CPATH}/static/bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="${CTPATH}/assets/css/app.css"/>
   <link rel="stylesheet" href="${CTPATH}/assets/font-awesome/css/font-awesome.min.css"/>
   <link rel="stylesheet" href="${CTPATH}/assets/mediaelement/mediaelementplayer.css" />
-  <@css_import />
-  <#if css ??>
-  	<style type="text/css">
-  	<@css />
-  	</style>
-  </#if>
 </head>
+
 <body class="blog-body">
 <header class="x-layout-100">
   <!-- -->
@@ -54,11 +53,17 @@
       </div>
     </div>
   </div>
-  <!-- -->
-  <div class="jblog-nav">
-    <div class="jblog-nav-content">
-      <ul>
-      	<li><a href="${CPATH}/">首页
+ 
+
+
+<nav class="navbar navbar-default">
+  <div class="jblog-nav navbar-header">
+    <div class="jblog-nav-content1" style="margin: 0 auto;width:1120px">
+      
+      
+      <ul class="nav nav-tabs">
+  		
+  		<li role="presentation"><a href="${CPATH}/">首页
       	<#if "/" == REQUEST.requestURI!>
       	<span class="x-a-border"></span>
       	</#if>
@@ -66,19 +71,77 @@
       	</li>
       	<@jp.menus>
         	<#list menus as menu>
-        		<li >
-        		<a  href="${menu.url!}">
-        		${menu.title!}
-        		<#if menu.isActive() >
+ 		  <li class="dropdown">
+ 		 		<a href="${menu.url!}" class="dropdown-toggle" data-toggle="dropdown">${menu.title!} <span class="caret"></span></a>
+ 		  		 <#if menu.childList??>
+ 		  			<ul class="dropdown-menu" role="menu">
+                 </#if>
+                 
+                 <#list menu.childList as childMenu>
+                 
+                  <li><a href="${childMenu.url!}">${childMenu.title!}</a></li>
+              
+                  </#list>
+                 
+                </ul>
+ 		  </li>
+ 		  
+ 		  </#list>
+ 		  </@jp.menus>
+ 		  
+	</ul>
+	<script>
+	$(function(){
+		$(".dropdown-toggle").one("click",function(){
+		
+		if($(this).attr("href")) 
+			window.location = $(this).attr("href");
+		$(this).dropdown("toggle");
+		
+		})
+		})
+		
+	$(function(){
+		$(".dropdown-toggle").on("mouseover", function() {
+		    if ($(this).is(".open")) {
+		        return
+		    }
+
+		    $(this).dropdown("toggle")
+		})
+		})	
+		
+
+		
+	</script>
+		
+	
+      
+     <!--  <div class="dropdown">
+  		<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+   			 Dropup
+    		<span class="caret"></span>
+  		</button>
+  
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <@jp.menus>
+        	<#list menus as menu>
+          	<li><a href="${menu.url!}">${menu.title!}
+          	<#if menu.isActive() >
         			<span class="x-a-border"></span>
         		</#if>
-        		</a>
-        		</li>
-        	</#list>
-        </@jp.menus>
-      </ul>
+          </a></li>
+          </#list>
+          </@jp.menus>
+       </ul>
+</div>
+       -->
+     
     </div>
   </div>
+  </nav>
+  
+  
 </header>
 <#nested> 
 <footer class="footer x-sm-footer">
@@ -88,7 +151,8 @@
 ${OPTION('jpblog_statistical_code')!}
 </div>
 <@script_import />
-  <script src="${CTPATH}/assets/js/jquery-2.1.1.min.js"></script>
+  
+
   <script src="${CTPATH}/assets/mediaelement/mediaelement-and-player.min.js"></script>
 <script type="text/javascript">
 <@script />

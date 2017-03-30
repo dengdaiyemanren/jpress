@@ -134,6 +134,15 @@ public class TaxonomyQuery extends JBaseQuery {
 
 		return DAO.find(sqlBuilder.toString(), type, contentId);
 	}
+	
+	public List<Taxonomy> findListByParentId(BigInteger parentId)
+	{
+		StringBuilder sqlBuilder = new StringBuilder("select t.* from taxonomy t");
+		sqlBuilder.append(" where t.parent_id = ? ");
+		
+		return DAO.find(sqlBuilder.toString(),parentId);
+	}
+	
 
 	public Taxonomy findBySlugAndModule(String slug, String module) {
 		return DAO.doFindFirstByCache(Taxonomy.CACHE_NAME, module + ":" + slug, "slug = ? and content_module=?", slug,

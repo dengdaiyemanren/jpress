@@ -374,6 +374,14 @@ public class ContentQuery extends JBaseQuery {
 	public List<Content> findByModule(String module) {
 		return DAO.doFind("module = ? ", module);
 	}
+	
+
+	
+	public List<Content> findByObjectId(BigInteger objId)
+	{
+		return DAO.doFind("object_id = ? ", objId);
+	}
+	
 
 	public List<Content> findByModuleAndTitle(String module, String title, int limit) {
 		return DAO.doFind("module = ? and title = ? order by id desc limit ?", module, title, limit);
